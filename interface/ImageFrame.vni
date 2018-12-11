@@ -1,0 +1,11 @@
+package vision;
+
+class ImageFrame {
+	
+	long time;			// capture time [usec]
+	
+	image_format_e format;
+	
+	float intensity = -1;
+	
+}

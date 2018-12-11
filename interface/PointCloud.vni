@@ -1,0 +1,15 @@
+package vision;
+
+class PointCloud {
+	
+	long time;
+	
+	string frame;
+	
+	CameraInfo camera_info;
+	
+	vehicle.Odometry* odometry;
+	
+	vector<point_t> points;
+	
+}

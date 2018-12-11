@@ -1,0 +1,17 @@
+package vision;
+
+import math.Vector3d;
+
+class StereoInfo extends basic.Transform3D {
+	
+	Vector3d rotation;				// relative rotation (roll, pitch, yaw) [rad]
+	
+	double baseline;				// distance between cameras [m]
+	
+	float focal_length_factor = 1;
+	
+	float priority = 0;
+	
+	void update();					// recompute matrix using baseline and rotation
+	
+}

@@ -1,0 +1,13 @@
+package vision;
+
+struct point_t {
+	
+	math.Vector3f position;
+	
+	float distance;
+	
+	float error;					// [0 to 1.0]
+	
+	math.Vector4uc color;
+	
+}

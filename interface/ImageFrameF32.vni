@@ -1,0 +1,7 @@
+package vision;
+
+class ImageFrameF32 extends ImageFrame {
+	
+	basic.ImageF32 image;
+	
+}

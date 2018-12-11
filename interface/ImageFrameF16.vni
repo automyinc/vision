@@ -1,0 +1,7 @@
+package vision;
+
+class ImageFrameF16 extends ImageFrame {
+	
+	basic.Image16 image;
+	
+}

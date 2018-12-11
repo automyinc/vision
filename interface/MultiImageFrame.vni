@@ -1,0 +1,7 @@
+package vision;
+
+class MultiImageFrame extends ImageFrame {
+	
+	vector<ImageFrame*> frames;
+	
+}

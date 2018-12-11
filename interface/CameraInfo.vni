@@ -1,0 +1,25 @@
+package vision;
+
+import math.Vector2f;
+import math.Vector3d;
+
+class CameraInfo extends basic.Transform3D {
+	
+	Vector3d position;				// relative to center rear axle (x, y, z) [m]
+	
+	Vector3d rotation;				// intrinsic rotation (roll, pitch, yaw) [rad]
+									// zero is looking in x direction with z pointing up
+	
+	float focal_length;				// [pixels]
+	float distortion[4];			// distortion coeffs (k_0, k_1, p_0, p_1) [1]
+	float model_factors[2];			// (linear, stereo-graphic) [1]
+	vector<Vector2f> radial_function;		// array of (radius [pixels], distortion [1])
+	
+	float exposure_time;			// [ms]
+	float sensor_gain;				// [dB]
+	
+	float priority = 0;
+	
+	void update();					// recompute matrix using position and rotation
+	
+}

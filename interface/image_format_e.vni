@@ -1,0 +1,12 @@
+package vision;
+
+enum image_format_e {
+	
+	RGB, RGBA, BGR,
+	BAYER_BG, BAYER_RG, BAYER_GB, BAYER_GR,
+	YUV422, YUV420, YUV420_NV12,
+	OPTICAL_FLOW, HEIGHT_MAP,
+	XYZE, ZE,
+	CUSTOM
+	
+}
