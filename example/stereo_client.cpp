@@ -27,6 +27,8 @@ class ProcessThread : public vnx::Thread {
 public:
 	ProcessThread(const std::string& vnx_name_) : Thread(vnx_name_) {}
 	
+	int max_queue_size = 2;
+	
 	void main() {
 		
 		/*
@@ -54,36 +56,68 @@ public:
 			std::shared_ptr<const vnx::Sample> sample = std::dynamic_pointer_cast<const vnx::Sample>(msg);
 			if(sample) {
 				if(sample->topic->get_name() == topic_rgba_input) {
-					rgba_frame = std::dynamic_pointer_cast<const vision::ImageFrame8>(sample->value);
+					auto value = std::dynamic_pointer_cast<const vision::ImageFrame8>(sample->value);
+					if(value) {
+						rgba_frames.push_back(value);
+					}
 				}
 				if(sample->topic->get_name() == topic_stereo_input) {
-					stereo_frame = std::dynamic_pointer_cast<const vision::ImageFrameF16>(sample->value);
+					auto value = std::dynamic_pointer_cast<const vision::ImageFrameF16>(sample->value);
+					if(value) {
+						stereo_frames.push_back(value);
+					}
 				}
 			}
 			
 			/*
 			 * See if we have two matching frames and if yes process them.
 			 */
-			if(rgba_frame && stereo_frame && rgba_frame->time == stereo_frame->time) {
-				
-				process();
-				
-				// clear data so we don't process it multiple times
-				rgba_frame = 0;
-				stereo_frame = 0;
+			for(auto iter_1 = rgba_frames.begin(); iter_1 != rgba_frames.end(); ++iter_1) {
+				auto rgba_frame = *iter_1;
+				bool found = false;
+				for(auto iter_2 = stereo_frames.begin(); iter_2 != stereo_frames.end(); ++iter_2) {
+					auto stereo_frame = *iter_2;
+					if(rgba_frame->time == stereo_frame->time) {
+						
+						process(rgba_frame, stereo_frame);
+						
+						// remove data so we don't process it multiple times
+						rgba_frames.erase(iter_1);
+						stereo_frames.erase(iter_2);
+						
+						// exit both loops
+						found = true;
+						break;
+					}
+				}
+				if(found) {
+					break;
+				}
+			}
+			/*
+			 * Limit maximum queue size.
+			 */
+			if(rgba_frames.size() > max_queue_size) {
+				rgba_frames.pop_front();
+			}
+			if(stereo_frames.size() > max_queue_size) {
+				stereo_frames.pop_front();
 			}
 		}
 	}
 	
-	void process() {
+	void process(	std::shared_ptr<const vision::ImageFrame8> rgba_frame,
+					std::shared_ptr<const vision::ImageFrameF16> stereo_frame)
+	{
+		vnx::log_info().out << "Processing frame " << rgba_frame->time << " ...";
 		// ----------------------------------------------------------------------------------------------
 		// Your processing code here.
 		// ----------------------------------------------------------------------------------------------
 	}
 	
 private:
-	std::shared_ptr<const vision::ImageFrame8> rgba_frame;
-	std::shared_ptr<const vision::ImageFrameF16> stereo_frame;
+	std::list<std::shared_ptr<const vision::ImageFrame8>> rgba_frames;
+	std::list<std::shared_ptr<const vision::ImageFrameF16>> stereo_frames;
 	
 };
 
