@@ -5,12 +5,13 @@
  *      Author: mad
  */
 
-#include <vision/CameraInfo.hxx>
+#include <automy/vision/CameraInfo.hxx>
+#include <automy/math/Math3D.h>
 
-#include <math/Math3D.h>
-using namespace math;
+using namespace automy::math;
 
 
+namespace automy {
 namespace vision {
 
 void CameraInfo::update() {
@@ -19,3 +20,4 @@ void CameraInfo::update() {
 
 
 } // vision
+} // automy

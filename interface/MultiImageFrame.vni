@@ -1,4 +1,4 @@
-package vision;
+package automy.vision;
 
 class MultiImageFrame extends ImageFrame {
 	

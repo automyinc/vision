@@ -1,6 +1,6 @@
 # Dependecies
 
-automy-math automy-basic automy-vehicle vnx-base
+automy-math automy-basic vnx-base(>=1.5.0)
 
 # Install
 

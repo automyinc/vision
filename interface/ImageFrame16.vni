@@ -1,9 +1,9 @@
-package vision;
+package automy.vision;
 
 class ImageFrame16 extends ImageFrame {
 	
 	int num_bits;		// 0 to 16
 	
-	basic.Image16 image;
+	automy.basic.Image16 image;
 	
 }

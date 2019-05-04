@@ -1,9 +1,9 @@
-package vision;
+package automy.vision;
 
-import math.Vector2f;
-import math.Vector3d;
+import automy.math.Vector2f;
+import automy.math.Vector3d;
 
-class CameraInfo extends basic.Transform3D {
+class CameraInfo extends automy.basic.Transform3D {
 	
 	Vector3d position;				// relative to center rear axle (x, y, z) [m]
 	

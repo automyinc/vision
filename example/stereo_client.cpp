@@ -5,8 +5,8 @@
  *      Author: Max Wittal
  */
 
-#include <vision/ImageFrame8.hxx>
-#include <vision/ImageFrameF16.hxx>
+#include <automy/vision/ImageFrame8.hxx>
+#include <automy/vision/ImageFrameF16.hxx>
 
 #include <vnx/Config.h>
 #include <vnx/Process.h>
@@ -14,6 +14,8 @@
 #include <vnx/Proxy.h>
 #include <vnx/Thread.h>
 #include <vnx/Sample.hxx>
+
+using namespace automy;
 
 
 /*
@@ -30,6 +32,14 @@ public:
 	int max_queue_size = 2;
 	
 	void main() {
+		
+		/*
+		 * Ensure backwards compatibility.
+		 */
+		vnx::register_type_alias(automy::vision::ImageFrame::VNX_TYPE_HASH, vnx::Hash64("vision.ImageFrame"));
+		vnx::register_type_alias(automy::vision::image_format_e::VNX_TYPE_HASH, vnx::Hash64("vision.image_format_e"));
+		vnx::register_type_alias(automy::vision::ImageFrame8::VNX_TYPE_HASH, vnx::Hash64("vision.ImageFrame8"));
+		vnx::register_type_alias(automy::vision::ImageFrameF16::VNX_TYPE_HASH, vnx::Hash64("vision.ImageFrameF16"));
 		
 		/*
 		 * Subscribe to the topics that we need.

@@ -1,8 +1,8 @@
-package vision;
+package automy.vision;
 
-import math.Vector3d;
+import automy.math.Vector3d;
 
-class StereoInfo extends basic.Transform3D {
+class StereoInfo extends automy.basic.Transform3D {
 	
 	Vector3d rotation;				// relative rotation (roll, pitch, yaw) [rad]
 	

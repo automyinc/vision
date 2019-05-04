@@ -1,4 +1,4 @@
-package vision;
+package automy.vision;
 
 enum image_format_e {
 	

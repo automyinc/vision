@@ -1,7 +1,7 @@
-package vision;
+package automy.vision;
 
 class ImageFrameF32 extends ImageFrame {
 	
-	basic.ImageF32 image;
+	automy.basic.ImageF32 image;
 	
 }

@@ -5,12 +5,13 @@
  *      Author: mad
  */
 
-#include <vision/StereoInfo.hxx>
+#include <automy/vision/StereoInfo.hxx>
+#include <automy/math/Math3D.h>
 
-#include <math/Math3D.h>
-using namespace math;
+using namespace automy::math;
 
 
+namespace automy {
 namespace vision {
 
 void StereoInfo::update() {
@@ -19,3 +20,4 @@ void StereoInfo::update() {
 
 
 } // vision
+} // automy
