@@ -7,6 +7,7 @@
 #include <automy/vision/package.hxx>
 #include <automy/vision/image_format_e.hxx>
 #include <vnx/Value.h>
+#include <vnx/Variant.h>
 
 
 namespace automy {
@@ -16,8 +17,12 @@ class ImageFrame : public ::vnx::Value {
 public:
 	
 	::int64_t time = 0;
+	::int64_t time_end = 0;
 	::automy::vision::image_format_e format;
+	::std::string frame;
+	::int32_t layer = 0;
 	::vnx::float32_t intensity = -1;
+	::std::map<::std::string, ::vnx::Variant> properties;
 	
 	typedef ::vnx::Value Super;
 	

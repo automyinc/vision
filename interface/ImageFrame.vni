@@ -2,10 +2,18 @@ package automy.vision;
 
 class ImageFrame {
 	
-	long time;			// capture time [usec]
+	long time;					// begin of capture [usec]
+	
+	long time_end;				// end of capture [usec]
 	
 	image_format_e format;
 	
+	string frame;				// coordinate frame
+	
+	int layer = 0;
+	
 	float intensity = -1;
+	
+	map<string, vnx.Variant> properties;
 	
 }
