@@ -26,6 +26,7 @@ class PointCloud;
 class StereoInfo;
 struct image_format_e;
 struct point_t;
+struct surface_t;
 
 } // namespace automy
 } // namespace vision
@@ -44,6 +45,7 @@ void read(TypeInput& in, ::automy::vision::PointCloud& value, const TypeCode* ty
 void read(TypeInput& in, ::automy::vision::StereoInfo& value, const TypeCode* type_code, const uint16_t* code); ///< \private
 void read(TypeInput& in, ::automy::vision::image_format_e& value, const TypeCode* type_code, const uint16_t* code); ///< \private
 void read(TypeInput& in, ::automy::vision::point_t& value, const TypeCode* type_code, const uint16_t* code); ///< \private
+void read(TypeInput& in, ::automy::vision::surface_t& value, const TypeCode* type_code, const uint16_t* code); ///< \private
 
 void write(TypeOutput& out, const ::automy::vision::CameraInfo& value, const TypeCode* type_code, const uint16_t* code); ///< \private
 void write(TypeOutput& out, const ::automy::vision::ImageFrame& value, const TypeCode* type_code, const uint16_t* code); ///< \private
@@ -56,6 +58,7 @@ void write(TypeOutput& out, const ::automy::vision::PointCloud& value, const Typ
 void write(TypeOutput& out, const ::automy::vision::StereoInfo& value, const TypeCode* type_code, const uint16_t* code); ///< \private
 void write(TypeOutput& out, const ::automy::vision::image_format_e& value, const TypeCode* type_code, const uint16_t* code); ///< \private
 void write(TypeOutput& out, const ::automy::vision::point_t& value, const TypeCode* type_code, const uint16_t* code); ///< \private
+void write(TypeOutput& out, const ::automy::vision::surface_t& value, const TypeCode* type_code, const uint16_t* code); ///< \private
 
 void read(std::istream& in, ::automy::vision::CameraInfo& value); ///< \private
 void read(std::istream& in, ::automy::vision::ImageFrame& value); ///< \private
@@ -68,6 +71,7 @@ void read(std::istream& in, ::automy::vision::PointCloud& value); ///< \private
 void read(std::istream& in, ::automy::vision::StereoInfo& value); ///< \private
 void read(std::istream& in, ::automy::vision::image_format_e& value); ///< \private
 void read(std::istream& in, ::automy::vision::point_t& value); ///< \private
+void read(std::istream& in, ::automy::vision::surface_t& value); ///< \private
 
 void write(std::ostream& out, const ::automy::vision::CameraInfo& value); ///< \private
 void write(std::ostream& out, const ::automy::vision::ImageFrame& value); ///< \private
@@ -80,6 +84,7 @@ void write(std::ostream& out, const ::automy::vision::PointCloud& value); ///< \
 void write(std::ostream& out, const ::automy::vision::StereoInfo& value); ///< \private
 void write(std::ostream& out, const ::automy::vision::image_format_e& value); ///< \private
 void write(std::ostream& out, const ::automy::vision::point_t& value); ///< \private
+void write(std::ostream& out, const ::automy::vision::surface_t& value); ///< \private
 
 void accept(Visitor& visitor, const ::automy::vision::CameraInfo& value); ///< \private
 void accept(Visitor& visitor, const ::automy::vision::ImageFrame& value); ///< \private
@@ -92,6 +97,7 @@ void accept(Visitor& visitor, const ::automy::vision::PointCloud& value); ///< \
 void accept(Visitor& visitor, const ::automy::vision::StereoInfo& value); ///< \private
 void accept(Visitor& visitor, const ::automy::vision::image_format_e& value); ///< \private
 void accept(Visitor& visitor, const ::automy::vision::point_t& value); ///< \private
+void accept(Visitor& visitor, const ::automy::vision::surface_t& value); ///< \private
 
 /// \private
 template<>
@@ -339,6 +345,29 @@ struct type<::automy::vision::point_t> {
 		vnx::write(out, value);
 	}
 	void accept(Visitor& visitor, const ::automy::vision::point_t& value) {
+		vnx::accept(visitor, value);
+	}
+	void create_dynamic_code(std::vector<uint16_t>& code) {
+		code.push_back(CODE_ANY);
+	}
+};
+
+/// \private
+template<>
+struct type<::automy::vision::surface_t> {
+	void read(TypeInput& in, ::automy::vision::surface_t& value, const TypeCode* type_code, const uint16_t* code) {
+		vnx::read(in, value, type_code, code);
+	}
+	void write(TypeOutput& out, const ::automy::vision::surface_t& value, const TypeCode* type_code, const uint16_t* code) {
+		vnx::write(out, value, type_code, code);
+	}
+	void read(std::istream& in, ::automy::vision::surface_t& value) {
+		vnx::read(in, value);
+	}
+	void write(std::ostream& out, const ::automy::vision::surface_t& value) {
+		vnx::write(out, value);
+	}
+	void accept(Visitor& visitor, const ::automy::vision::surface_t& value) {
 		vnx::accept(visitor, value);
 	}
 	void create_dynamic_code(std::vector<uint16_t>& code) {

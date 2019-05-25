@@ -9,6 +9,7 @@ cp $SRC/interface/MultiImageFrame.vni interface/
 cp $SRC/interface/point_t.vni interface/
 cp $SRC/interface/PointCloud.vni interface/
 cp $SRC/interface/StereoInfo.vni interface/
+cp $SRC/interface/surface_t.vni interface/
 
 cp $SRC/src/CameraInfo.cpp src/
 cp $SRC/src/StereoInfo.cpp src/

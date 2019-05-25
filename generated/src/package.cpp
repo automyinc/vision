@@ -14,6 +14,7 @@
 #include <automy/vision/StereoInfo.hxx>
 #include <automy/vision/image_format_e.hxx>
 #include <automy/vision/point_t.hxx>
+#include <automy/vision/surface_t.hxx>
 
 
 
@@ -33,6 +34,7 @@ static void register_all_types() {
 	vnx::register_type_code(automy::vision::StereoInfo::create_type_code());
 	vnx::register_type_code(automy::vision::image_format_e::create_type_code());
 	vnx::register_type_code(automy::vision::point_t::create_type_code());
+	vnx::register_type_code(automy::vision::surface_t::create_type_code());
 }
 
 static struct vnx_static_init {

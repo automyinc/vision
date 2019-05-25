@@ -1,0 +1,27 @@
+package automy.vision;
+
+import automy.math.Vector2f;
+import automy.math.Vector3f;
+
+/*
+ * Camera coordinate system convention:
+ *  - X goes to the left (opposite to image coordinate)
+ *  - Y goes up (same as image coordinate)
+ *  - Z goes out the image (positive depth is in front)
+ */
+
+struct surface_t {
+	
+	Vector3f center;		// 3D center of mass (x, y, z) [m]
+	
+	Vector3f normal;		// 3D surface normal (positive in Z direction) [1]
+	
+	Vector2f angle;			// (roll, pitch) [deg]
+	
+	Vector2f size;			// (width, height) [m]
+	
+	float total_angle;		// 3D angle between surface normal and Z axis [deg]
+	
+	float error;			// plane fit error norm [m]
+	
+}
