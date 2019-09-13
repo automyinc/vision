@@ -18,8 +18,8 @@ target_link_libraries(automy_vision automy_vehicle automy_basic automy_math vnx_
 add_executable(example_stereo_client example/stereo_client.cpp)
 target_link_libraries(example_stereo_client automy_vision automy_vehicle)
 
-install(DIRECTORY include/ DESTINATION include/automy)
-install(DIRECTORY generated/include/ DESTINATION include/automy)
+install(DIRECTORY include/ DESTINATION include)
+install(DIRECTORY generated/include/ DESTINATION include)
 install(DIRECTORY interface/ DESTINATION interface/automy/vision)
 
 install(TARGETS automy_vision DESTINATION lib)
