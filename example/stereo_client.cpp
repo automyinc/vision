@@ -8,7 +8,7 @@
 #include <automy/vision/ImageFrame8.hxx>
 #include <automy/vision/ImageFrameF16.hxx>
 
-#include <vnx/Config.h>
+#include <vnx/Config.hpp>
 #include <vnx/Process.h>
 #include <vnx/Terminal.h>
 #include <vnx/Proxy.h>
