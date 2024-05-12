@@ -6,26 +6,31 @@
 
 #include <vnx/Type.h>
 #include <automy/vision/package.hxx>
-#include <automy/math/Vector3f.h>
-#include <automy/math/Vector4uc.h>
+#include <automy/math/Vector3f.hpp>
+#include <automy/math/Vector4uc.hpp>
 
 
 namespace automy {
 namespace vision {
 
-struct point_t {
+struct AUTOMY_VISION_EXPORT point_t {
 	
 	
 	::automy::math::Vector3f position;
-	::vnx::float32_t distance = 0;
-	::vnx::float32_t error = 0;
+	vnx::float32_t distance = 0;
+	vnx::float32_t error = 0;
 	::automy::math::Vector4uc color;
 	
 	static const vnx::Hash64 VNX_TYPE_HASH;
 	static const vnx::Hash64 VNX_CODE_HASH;
 	
+	static constexpr uint64_t VNX_TYPE_ID = 0x4c4ecba106b9f17eull;
+	
+	point_t() {}
+	
 	vnx::Hash64 get_type_hash() const;
-	const char* get_type_name() const;
+	std::string get_type_name() const;
+	const vnx::TypeCode* get_type_code() const;
 	
 	static std::shared_ptr<point_t> create();
 	std::shared_ptr<point_t> clone() const;
@@ -36,21 +41,46 @@ struct point_t {
 	void read(std::istream& _in);
 	void write(std::ostream& _out) const;
 	
+	template<typename T>
+	void accept_generic(T& _visitor) const;
 	void accept(vnx::Visitor& _visitor) const;
 	
 	vnx::Object to_object() const;
 	void from_object(const vnx::Object& object);
 	
+	vnx::Variant get_field(const std::string& name) const;
+	void set_field(const std::string& name, const vnx::Variant& value);
+	
 	friend std::ostream& operator<<(std::ostream& _out, const point_t& _value);
 	friend std::istream& operator>>(std::istream& _in, point_t& _value);
 	
-	static const vnx::TypeCode* get_type_code();
-	static std::shared_ptr<vnx::TypeCode> create_type_code();
+	static const vnx::TypeCode* static_get_type_code();
+	static std::shared_ptr<vnx::TypeCode> static_create_type_code();
 	
 };
+
+template<typename T>
+void point_t::accept_generic(T& _visitor) const {
+	_visitor.template type_begin<point_t>(4);
+	_visitor.type_field("position", 0); _visitor.accept(position);
+	_visitor.type_field("distance", 1); _visitor.accept(distance);
+	_visitor.type_field("error", 2); _visitor.accept(error);
+	_visitor.type_field("color", 3); _visitor.accept(color);
+	_visitor.template type_end<point_t>(4);
+}
 
 
 } // namespace automy
 } // namespace vision
+
+
+namespace vnx {
+
+template<>
+struct is_equivalent<::automy::vision::point_t> {
+	bool operator()(const uint16_t* code, const TypeCode* type_code);
+};
+
+} // vnx
 
 #endif // INCLUDE_automy_vision_point_t_HXX_

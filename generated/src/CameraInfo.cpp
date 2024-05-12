@@ -3,11 +3,11 @@
 
 #include <automy/vision/package.hxx>
 #include <automy/vision/CameraInfo.hxx>
-#include <vnx/Input.h>
-#include <vnx/Output.h>
-#include <vnx/Visitor.h>
-#include <vnx/Object.h>
-#include <vnx/Struct.h>
+#include <automy/basic/Transform3D.hxx>
+#include <automy/math/Vector2f.hpp>
+#include <automy/math/Vector3d.hpp>
+
+#include <vnx/vnx.h>
 
 
 namespace automy {
@@ -15,14 +15,18 @@ namespace vision {
 
 
 const vnx::Hash64 CameraInfo::VNX_TYPE_HASH(0x6520ea972c49a3f6ull);
-const vnx::Hash64 CameraInfo::VNX_CODE_HASH(0x1c9908134b64decfull);
+const vnx::Hash64 CameraInfo::VNX_CODE_HASH(0x7de06e0ae24b891ull);
 
 vnx::Hash64 CameraInfo::get_type_hash() const {
 	return VNX_TYPE_HASH;
 }
 
-const char* CameraInfo::get_type_name() const {
+std::string CameraInfo::get_type_name() const {
 	return "automy.vision.CameraInfo";
+}
+
+const vnx::TypeCode* CameraInfo::get_type_code() const {
+	return automy::vision::vnx_native_type_code_CameraInfo;
 }
 
 std::shared_ptr<CameraInfo> CameraInfo::create() {
@@ -42,25 +46,31 @@ void CameraInfo::write(vnx::TypeOutput& _out, const vnx::TypeCode* _type_code, c
 }
 
 void CameraInfo::accept(vnx::Visitor& _visitor) const {
-	const vnx::TypeCode* _type_code = get_type_code();
+	const vnx::TypeCode* _type_code = automy::vision::vnx_native_type_code_CameraInfo;
 	_visitor.type_begin(*_type_code);
 	_visitor.type_field(_type_code->fields[0], 0); vnx::accept(_visitor, time);
-	_visitor.type_field(_type_code->fields[1], 1); vnx::accept(_visitor, matrix);
-	_visitor.type_field(_type_code->fields[2], 2); vnx::accept(_visitor, position);
-	_visitor.type_field(_type_code->fields[3], 3); vnx::accept(_visitor, rotation);
-	_visitor.type_field(_type_code->fields[4], 4); vnx::accept(_visitor, focal_length);
-	_visitor.type_field(_type_code->fields[5], 5); vnx::accept(_visitor, distortion);
-	_visitor.type_field(_type_code->fields[6], 6); vnx::accept(_visitor, model_factors);
-	_visitor.type_field(_type_code->fields[7], 7); vnx::accept(_visitor, radial_function);
-	_visitor.type_field(_type_code->fields[8], 8); vnx::accept(_visitor, exposure_time);
-	_visitor.type_field(_type_code->fields[9], 9); vnx::accept(_visitor, sensor_gain);
-	_visitor.type_field(_type_code->fields[10], 10); vnx::accept(_visitor, priority);
+	_visitor.type_field(_type_code->fields[1], 1); vnx::accept(_visitor, time_offset);
+	_visitor.type_field(_type_code->fields[2], 2); vnx::accept(_visitor, frame);
+	_visitor.type_field(_type_code->fields[3], 3); vnx::accept(_visitor, parent);
+	_visitor.type_field(_type_code->fields[4], 4); vnx::accept(_visitor, matrix);
+	_visitor.type_field(_type_code->fields[5], 5); vnx::accept(_visitor, position);
+	_visitor.type_field(_type_code->fields[6], 6); vnx::accept(_visitor, rotation);
+	_visitor.type_field(_type_code->fields[7], 7); vnx::accept(_visitor, focal_length);
+	_visitor.type_field(_type_code->fields[8], 8); vnx::accept(_visitor, distortion);
+	_visitor.type_field(_type_code->fields[9], 9); vnx::accept(_visitor, model_factors);
+	_visitor.type_field(_type_code->fields[10], 10); vnx::accept(_visitor, radial_function);
+	_visitor.type_field(_type_code->fields[11], 11); vnx::accept(_visitor, exposure_time);
+	_visitor.type_field(_type_code->fields[12], 12); vnx::accept(_visitor, sensor_gain);
+	_visitor.type_field(_type_code->fields[13], 13); vnx::accept(_visitor, priority);
 	_visitor.type_end(*_type_code);
 }
 
 void CameraInfo::write(std::ostream& _out) const {
-	_out << "{";
-	_out << "\"time\": "; vnx::write(_out, time);
+	_out << "{\"__type\": \"automy.vision.CameraInfo\"";
+	_out << ", \"time\": "; vnx::write(_out, time);
+	_out << ", \"time_offset\": "; vnx::write(_out, time_offset);
+	_out << ", \"frame\": "; vnx::write(_out, frame);
+	_out << ", \"parent\": "; vnx::write(_out, parent);
 	_out << ", \"matrix\": "; vnx::write(_out, matrix);
 	_out << ", \"position\": "; vnx::write(_out, position);
 	_out << ", \"rotation\": "; vnx::write(_out, rotation);
@@ -75,38 +85,18 @@ void CameraInfo::write(std::ostream& _out) const {
 }
 
 void CameraInfo::read(std::istream& _in) {
-	std::map<std::string, std::string> _object;
-	vnx::read_object(_in, _object);
-	for(const auto& _entry : _object) {
-		if(_entry.first == "distortion") {
-			vnx::from_string(_entry.second, distortion);
-		} else if(_entry.first == "exposure_time") {
-			vnx::from_string(_entry.second, exposure_time);
-		} else if(_entry.first == "focal_length") {
-			vnx::from_string(_entry.second, focal_length);
-		} else if(_entry.first == "matrix") {
-			vnx::from_string(_entry.second, matrix);
-		} else if(_entry.first == "model_factors") {
-			vnx::from_string(_entry.second, model_factors);
-		} else if(_entry.first == "position") {
-			vnx::from_string(_entry.second, position);
-		} else if(_entry.first == "priority") {
-			vnx::from_string(_entry.second, priority);
-		} else if(_entry.first == "radial_function") {
-			vnx::from_string(_entry.second, radial_function);
-		} else if(_entry.first == "rotation") {
-			vnx::from_string(_entry.second, rotation);
-		} else if(_entry.first == "sensor_gain") {
-			vnx::from_string(_entry.second, sensor_gain);
-		} else if(_entry.first == "time") {
-			vnx::from_string(_entry.second, time);
-		}
+	if(auto _json = vnx::read_json(_in)) {
+		from_object(_json->to_object());
 	}
 }
 
 vnx::Object CameraInfo::to_object() const {
 	vnx::Object _object;
+	_object["__type"] = "automy.vision.CameraInfo";
 	_object["time"] = time;
+	_object["time_offset"] = time_offset;
+	_object["frame"] = frame;
+	_object["parent"] = parent;
 	_object["matrix"] = matrix;
 	_object["position"] = position;
 	_object["rotation"] = rotation;
@@ -128,10 +118,14 @@ void CameraInfo::from_object(const vnx::Object& _object) {
 			_entry.second.to(exposure_time);
 		} else if(_entry.first == "focal_length") {
 			_entry.second.to(focal_length);
+		} else if(_entry.first == "frame") {
+			_entry.second.to(frame);
 		} else if(_entry.first == "matrix") {
 			_entry.second.to(matrix);
 		} else if(_entry.first == "model_factors") {
 			_entry.second.to(model_factors);
+		} else if(_entry.first == "parent") {
+			_entry.second.to(parent);
 		} else if(_entry.first == "position") {
 			_entry.second.to(position);
 		} else if(_entry.first == "priority") {
@@ -144,7 +138,87 @@ void CameraInfo::from_object(const vnx::Object& _object) {
 			_entry.second.to(sensor_gain);
 		} else if(_entry.first == "time") {
 			_entry.second.to(time);
+		} else if(_entry.first == "time_offset") {
+			_entry.second.to(time_offset);
 		}
+	}
+}
+
+vnx::Variant CameraInfo::get_field(const std::string& _name) const {
+	if(_name == "time") {
+		return vnx::Variant(time);
+	}
+	if(_name == "time_offset") {
+		return vnx::Variant(time_offset);
+	}
+	if(_name == "frame") {
+		return vnx::Variant(frame);
+	}
+	if(_name == "parent") {
+		return vnx::Variant(parent);
+	}
+	if(_name == "matrix") {
+		return vnx::Variant(matrix);
+	}
+	if(_name == "position") {
+		return vnx::Variant(position);
+	}
+	if(_name == "rotation") {
+		return vnx::Variant(rotation);
+	}
+	if(_name == "focal_length") {
+		return vnx::Variant(focal_length);
+	}
+	if(_name == "distortion") {
+		return vnx::Variant(distortion);
+	}
+	if(_name == "model_factors") {
+		return vnx::Variant(model_factors);
+	}
+	if(_name == "radial_function") {
+		return vnx::Variant(radial_function);
+	}
+	if(_name == "exposure_time") {
+		return vnx::Variant(exposure_time);
+	}
+	if(_name == "sensor_gain") {
+		return vnx::Variant(sensor_gain);
+	}
+	if(_name == "priority") {
+		return vnx::Variant(priority);
+	}
+	return vnx::Variant();
+}
+
+void CameraInfo::set_field(const std::string& _name, const vnx::Variant& _value) {
+	if(_name == "time") {
+		_value.to(time);
+	} else if(_name == "time_offset") {
+		_value.to(time_offset);
+	} else if(_name == "frame") {
+		_value.to(frame);
+	} else if(_name == "parent") {
+		_value.to(parent);
+	} else if(_name == "matrix") {
+		_value.to(matrix);
+	} else if(_name == "position") {
+		_value.to(position);
+	} else if(_name == "rotation") {
+		_value.to(rotation);
+	} else if(_name == "focal_length") {
+		_value.to(focal_length);
+	} else if(_name == "distortion") {
+		_value.to(distortion);
+	} else if(_name == "model_factors") {
+		_value.to(model_factors);
+	} else if(_name == "radial_function") {
+		_value.to(radial_function);
+	} else if(_name == "exposure_time") {
+		_value.to(exposure_time);
+	} else if(_name == "sensor_gain") {
+		_value.to(sensor_gain);
+	} else if(_name == "priority") {
+		_value.to(priority);
 	}
 }
 
@@ -160,86 +234,119 @@ std::istream& operator>>(std::istream& _in, CameraInfo& _value) {
 	return _in;
 }
 
-const vnx::TypeCode* CameraInfo::get_type_code() {
-	const vnx::TypeCode* type_code = vnx::get_type_code(vnx::Hash64(0x6520ea972c49a3f6ull));
+const vnx::TypeCode* CameraInfo::static_get_type_code() {
+	const vnx::TypeCode* type_code = vnx::get_type_code(VNX_TYPE_HASH);
 	if(!type_code) {
-		type_code = vnx::register_type_code(create_type_code());
+		type_code = vnx::register_type_code(static_create_type_code());
 	}
 	return type_code;
 }
 
-std::shared_ptr<vnx::TypeCode> CameraInfo::create_type_code() {
-	std::shared_ptr<vnx::TypeCode> type_code = std::make_shared<vnx::TypeCode>(true);
+std::shared_ptr<vnx::TypeCode> CameraInfo::static_create_type_code() {
+	auto type_code = std::make_shared<vnx::TypeCode>();
 	type_code->name = "automy.vision.CameraInfo";
 	type_code->type_hash = vnx::Hash64(0x6520ea972c49a3f6ull);
-	type_code->code_hash = vnx::Hash64(0x1c9908134b64decfull);
+	type_code->code_hash = vnx::Hash64(0x7de06e0ae24b891ull);
+	type_code->is_native = true;
 	type_code->is_class = true;
+	type_code->native_size = sizeof(::automy::vision::CameraInfo);
 	type_code->parents.resize(1);
-	type_code->parents[0] = ::automy::basic::Transform3D::get_type_code();
+	type_code->parents[0] = ::automy::basic::Transform3D::static_get_type_code();
 	type_code->create_value = []() -> std::shared_ptr<vnx::Value> { return std::make_shared<CameraInfo>(); };
-	type_code->fields.resize(11);
+	type_code->fields.resize(14);
 	{
-		vnx::TypeField& field = type_code->fields[0];
+		auto& field = type_code->fields[0];
+		field.data_size = 8;
 		field.name = "time";
 		field.code = {8};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[1];
+		auto& field = type_code->fields[1];
+		field.data_size = 4;
+		field.name = "time_offset";
+		field.code = {7};
+	}
+	{
+		auto& field = type_code->fields[2];
+		field.is_extended = true;
+		field.name = "frame";
+		field.code = {32};
+	}
+	{
+		auto& field = type_code->fields[3];
+		field.is_extended = true;
+		field.name = "parent";
+		field.code = {32};
+	}
+	{
+		auto& field = type_code->fields[4];
 		field.is_extended = true;
 		field.name = "matrix";
 		field.code = {21, 2, 4, 4, 10};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[2];
+		auto& field = type_code->fields[5];
 		field.is_extended = true;
 		field.name = "position";
 		field.code = {21, 2, 3, 1, 10};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[3];
+		auto& field = type_code->fields[6];
 		field.is_extended = true;
 		field.name = "rotation";
 		field.code = {21, 2, 3, 1, 10};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[4];
+		auto& field = type_code->fields[7];
+		field.data_size = 4;
 		field.name = "focal_length";
 		field.code = {9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[5];
+		auto& field = type_code->fields[8];
+		field.data_size = 16;
 		field.name = "distortion";
 		field.code = {11, 4, 9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[6];
+		auto& field = type_code->fields[9];
+		field.data_size = 8;
 		field.name = "model_factors";
 		field.code = {11, 2, 9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[7];
+		auto& field = type_code->fields[10];
 		field.is_extended = true;
 		field.name = "radial_function";
 		field.code = {12, 21, 2, 2, 1, 9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[8];
+		auto& field = type_code->fields[11];
+		field.data_size = 4;
 		field.name = "exposure_time";
 		field.code = {9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[9];
+		auto& field = type_code->fields[12];
+		field.data_size = 4;
 		field.name = "sensor_gain";
 		field.code = {9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[10];
+		auto& field = type_code->fields[13];
+		field.data_size = 4;
 		field.name = "priority";
 		field.value = vnx::to_string(0);
 		field.code = {9};
 	}
 	type_code->build();
 	return type_code;
+}
+
+std::shared_ptr<vnx::Value> CameraInfo::vnx_call_switch(std::shared_ptr<const vnx::Value> _method) {
+	switch(_method->get_type_hash()) {
+	}
+	return nullptr;
 }
 
 
@@ -250,92 +357,103 @@ std::shared_ptr<vnx::TypeCode> CameraInfo::create_type_code() {
 namespace vnx {
 
 void read(TypeInput& in, ::automy::vision::CameraInfo& value, const TypeCode* type_code, const uint16_t* code) {
+	if(code) {
+		switch(code[0]) {
+			case CODE_OBJECT:
+			case CODE_ALT_OBJECT: {
+				Object tmp;
+				vnx::read(in, tmp, type_code, code);
+				value.from_object(tmp);
+				return;
+			}
+			case CODE_DYNAMIC:
+			case CODE_ALT_DYNAMIC:
+				vnx::read_dynamic(in, value);
+				return;
+		}
+	}
 	if(!type_code) {
-		throw std::logic_error("read(): type_code == 0");
+		vnx::skip(in, type_code, code);
+		return;
 	}
 	if(code) {
 		switch(code[0]) {
 			case CODE_STRUCT: type_code = type_code->depends[code[1]]; break;
 			case CODE_ALT_STRUCT: type_code = type_code->depends[vnx::flip_bytes(code[1])]; break;
-			default: vnx::skip(in, type_code, code); return;
+			default: {
+				vnx::skip(in, type_code, code);
+				return;
+			}
 		}
 	}
-	const char* const _buf = in.read(type_code->total_field_size);
+	const auto* const _buf = in.read(type_code->total_field_size);
 	if(type_code->is_matched) {
-		{
-			const vnx::TypeField* const _field = type_code->field_map[0];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.time, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[0]) {
+			vnx::read_value(_buf + _field->offset, value.time, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[4];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.focal_length, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[1]) {
+			vnx::read_value(_buf + _field->offset, value.time_offset, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[5];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.distortion, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[7]) {
+			vnx::read_value(_buf + _field->offset, value.focal_length, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[6];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.model_factors, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[8]) {
+			vnx::read_value(_buf + _field->offset, value.distortion, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[8];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.exposure_time, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[9]) {
+			vnx::read_value(_buf + _field->offset, value.model_factors, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[9];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.sensor_gain, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[11]) {
+			vnx::read_value(_buf + _field->offset, value.exposure_time, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[10];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.priority, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[12]) {
+			vnx::read_value(_buf + _field->offset, value.sensor_gain, _field->code.data());
+		}
+		if(const auto* const _field = type_code->field_map[13]) {
+			vnx::read_value(_buf + _field->offset, value.priority, _field->code.data());
 		}
 	}
-	for(const vnx::TypeField* _field : type_code->ext_fields) {
+	for(const auto* _field : type_code->ext_fields) {
 		switch(_field->native_index) {
-			case 1: vnx::read(in, value.matrix, type_code, _field->code.data()); break;
-			case 2: vnx::read(in, value.position, type_code, _field->code.data()); break;
-			case 3: vnx::read(in, value.rotation, type_code, _field->code.data()); break;
-			case 7: vnx::read(in, value.radial_function, type_code, _field->code.data()); break;
+			case 2: vnx::read(in, value.frame, type_code, _field->code.data()); break;
+			case 3: vnx::read(in, value.parent, type_code, _field->code.data()); break;
+			case 4: vnx::read(in, value.matrix, type_code, _field->code.data()); break;
+			case 5: vnx::read(in, value.position, type_code, _field->code.data()); break;
+			case 6: vnx::read(in, value.rotation, type_code, _field->code.data()); break;
+			case 10: vnx::read(in, value.radial_function, type_code, _field->code.data()); break;
 			default: vnx::skip(in, type_code, _field->code.data());
 		}
 	}
 }
 
 void write(TypeOutput& out, const ::automy::vision::CameraInfo& value, const TypeCode* type_code, const uint16_t* code) {
+	if(code && code[0] == CODE_OBJECT) {
+		vnx::write(out, value.to_object(), nullptr, code);
+		return;
+	}
 	if(!type_code || (code && code[0] == CODE_ANY)) {
-		type_code = vnx::write_type_code<::automy::vision::CameraInfo>(out);
+		type_code = automy::vision::vnx_native_type_code_CameraInfo;
+		out.write_type_code(type_code);
 		vnx::write_class_header<::automy::vision::CameraInfo>(out);
 	}
-	if(code && code[0] == CODE_STRUCT) {
+	else if(code && code[0] == CODE_STRUCT) {
 		type_code = type_code->depends[code[1]];
 	}
-	char* const _buf = out.write(48);
+	auto* const _buf = out.write(52);
 	vnx::write_value(_buf + 0, value.time);
-	vnx::write_value(_buf + 8, value.focal_length);
-	vnx::write_value(_buf + 12, value.distortion);
-	vnx::write_value(_buf + 28, value.model_factors);
-	vnx::write_value(_buf + 36, value.exposure_time);
-	vnx::write_value(_buf + 40, value.sensor_gain);
-	vnx::write_value(_buf + 44, value.priority);
-	vnx::write(out, value.matrix, type_code, type_code->fields[1].code.data());
-	vnx::write(out, value.position, type_code, type_code->fields[2].code.data());
-	vnx::write(out, value.rotation, type_code, type_code->fields[3].code.data());
-	vnx::write(out, value.radial_function, type_code, type_code->fields[7].code.data());
+	vnx::write_value(_buf + 8, value.time_offset);
+	vnx::write_value(_buf + 12, value.focal_length);
+	vnx::write_value(_buf + 16, value.distortion);
+	vnx::write_value(_buf + 32, value.model_factors);
+	vnx::write_value(_buf + 40, value.exposure_time);
+	vnx::write_value(_buf + 44, value.sensor_gain);
+	vnx::write_value(_buf + 48, value.priority);
+	vnx::write(out, value.frame, type_code, type_code->fields[2].code.data());
+	vnx::write(out, value.parent, type_code, type_code->fields[3].code.data());
+	vnx::write(out, value.matrix, type_code, type_code->fields[4].code.data());
+	vnx::write(out, value.position, type_code, type_code->fields[5].code.data());
+	vnx::write(out, value.rotation, type_code, type_code->fields[6].code.data());
+	vnx::write(out, value.radial_function, type_code, type_code->fields[10].code.data());
 }
 
 void read(std::istream& in, ::automy::vision::CameraInfo& value) {

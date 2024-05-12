@@ -10,9 +10,19 @@
 #include <automy/math/package.hxx>
 #include <vnx/package.hxx>
 
+#ifdef AUTOMY_VISION_EXPORT_ENABLE
+#include <automy_vision_export.h>
+#else
+#ifndef AUTOMY_VISION_EXPORT
+#define AUTOMY_VISION_EXPORT
+#endif
+#endif
+
 
 namespace automy {
 namespace vision {
+
+void register_all_types();
 
 
 class CameraInfo;
@@ -27,6 +37,19 @@ class StereoInfo;
 struct image_format_e;
 struct point_t;
 struct surface_t;
+
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_CameraInfo; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_ImageFrame; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_ImageFrame16; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_ImageFrame8; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_ImageFrameF16; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_ImageFrameF32; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_MultiImageFrame; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_PointCloud; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_StereoInfo; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_image_format_e; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_point_t; ///< \private
+AUTOMY_VISION_EXPORT extern const vnx::TypeCode* const vnx_native_type_code_surface_t; ///< \private
 
 } // namespace automy
 } // namespace vision
@@ -117,9 +140,9 @@ struct type<::automy::vision::CameraInfo> {
 	void accept(Visitor& visitor, const ::automy::vision::CameraInfo& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::CameraInfo& value, bool special = false);
 };
 
 /// \private
@@ -140,9 +163,9 @@ struct type<::automy::vision::ImageFrame> {
 	void accept(Visitor& visitor, const ::automy::vision::ImageFrame& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::ImageFrame& value, bool special = false);
 };
 
 /// \private
@@ -163,9 +186,9 @@ struct type<::automy::vision::ImageFrame16> {
 	void accept(Visitor& visitor, const ::automy::vision::ImageFrame16& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::ImageFrame16& value, bool special = false);
 };
 
 /// \private
@@ -186,9 +209,9 @@ struct type<::automy::vision::ImageFrame8> {
 	void accept(Visitor& visitor, const ::automy::vision::ImageFrame8& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::ImageFrame8& value, bool special = false);
 };
 
 /// \private
@@ -209,9 +232,9 @@ struct type<::automy::vision::ImageFrameF16> {
 	void accept(Visitor& visitor, const ::automy::vision::ImageFrameF16& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::ImageFrameF16& value, bool special = false);
 };
 
 /// \private
@@ -232,9 +255,9 @@ struct type<::automy::vision::ImageFrameF32> {
 	void accept(Visitor& visitor, const ::automy::vision::ImageFrameF32& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::ImageFrameF32& value, bool special = false);
 };
 
 /// \private
@@ -255,9 +278,9 @@ struct type<::automy::vision::MultiImageFrame> {
 	void accept(Visitor& visitor, const ::automy::vision::MultiImageFrame& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::MultiImageFrame& value, bool special = false);
 };
 
 /// \private
@@ -278,9 +301,9 @@ struct type<::automy::vision::PointCloud> {
 	void accept(Visitor& visitor, const ::automy::vision::PointCloud& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::PointCloud& value, bool special = false);
 };
 
 /// \private
@@ -301,9 +324,9 @@ struct type<::automy::vision::StereoInfo> {
 	void accept(Visitor& visitor, const ::automy::vision::StereoInfo& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::StereoInfo& value, bool special = false);
 };
 
 /// \private
@@ -324,9 +347,9 @@ struct type<::automy::vision::image_format_e> {
 	void accept(Visitor& visitor, const ::automy::vision::image_format_e& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::image_format_e& value, bool special = false);
 };
 
 /// \private
@@ -347,9 +370,9 @@ struct type<::automy::vision::point_t> {
 	void accept(Visitor& visitor, const ::automy::vision::point_t& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::point_t& value, bool special = false);
 };
 
 /// \private
@@ -370,9 +393,9 @@ struct type<::automy::vision::surface_t> {
 	void accept(Visitor& visitor, const ::automy::vision::surface_t& value) {
 		vnx::accept(visitor, value);
 	}
-	void create_dynamic_code(std::vector<uint16_t>& code) {
-		code.push_back(CODE_ANY);
-	}
+	const TypeCode* get_type_code();
+	void create_dynamic_code(std::vector<uint16_t>& code);
+	void create_dynamic_code(std::vector<uint16_t>& code, const ::automy::vision::surface_t& value, bool special = false);
 };
 
 

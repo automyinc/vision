@@ -3,11 +3,10 @@
 
 #include <automy/vision/package.hxx>
 #include <automy/vision/surface_t.hxx>
-#include <vnx/Input.h>
-#include <vnx/Output.h>
-#include <vnx/Visitor.h>
-#include <vnx/Object.h>
-#include <vnx/Struct.h>
+#include <automy/math/Vector2f.hpp>
+#include <automy/math/Vector3f.hpp>
+
+#include <vnx/vnx.h>
 
 
 namespace automy {
@@ -21,8 +20,12 @@ vnx::Hash64 surface_t::get_type_hash() const {
 	return VNX_TYPE_HASH;
 }
 
-const char* surface_t::get_type_name() const {
+std::string surface_t::get_type_name() const {
 	return "automy.vision.surface_t";
+}
+
+const vnx::TypeCode* surface_t::get_type_code() const {
+	return automy::vision::vnx_native_type_code_surface_t;
 }
 
 std::shared_ptr<surface_t> surface_t::create() {
@@ -42,7 +45,7 @@ void surface_t::write(vnx::TypeOutput& _out, const vnx::TypeCode* _type_code, co
 }
 
 void surface_t::accept(vnx::Visitor& _visitor) const {
-	const vnx::TypeCode* _type_code = get_type_code();
+	const vnx::TypeCode* _type_code = automy::vision::vnx_native_type_code_surface_t;
 	_visitor.type_begin(*_type_code);
 	_visitor.type_field(_type_code->fields[0], 0); vnx::accept(_visitor, center);
 	_visitor.type_field(_type_code->fields[1], 1); vnx::accept(_visitor, normal);
@@ -65,27 +68,14 @@ void surface_t::write(std::ostream& _out) const {
 }
 
 void surface_t::read(std::istream& _in) {
-	std::map<std::string, std::string> _object;
-	vnx::read_object(_in, _object);
-	for(const auto& _entry : _object) {
-		if(_entry.first == "angle") {
-			vnx::from_string(_entry.second, angle);
-		} else if(_entry.first == "center") {
-			vnx::from_string(_entry.second, center);
-		} else if(_entry.first == "error") {
-			vnx::from_string(_entry.second, error);
-		} else if(_entry.first == "normal") {
-			vnx::from_string(_entry.second, normal);
-		} else if(_entry.first == "size") {
-			vnx::from_string(_entry.second, size);
-		} else if(_entry.first == "total_angle") {
-			vnx::from_string(_entry.second, total_angle);
-		}
+	if(auto _json = vnx::read_json(_in)) {
+		from_object(_json->to_object());
 	}
 }
 
 vnx::Object surface_t::to_object() const {
 	vnx::Object _object;
+	_object["__type"] = "automy.vision.surface_t";
 	_object["center"] = center;
 	_object["normal"] = normal;
 	_object["angle"] = angle;
@@ -113,6 +103,44 @@ void surface_t::from_object(const vnx::Object& _object) {
 	}
 }
 
+vnx::Variant surface_t::get_field(const std::string& _name) const {
+	if(_name == "center") {
+		return vnx::Variant(center);
+	}
+	if(_name == "normal") {
+		return vnx::Variant(normal);
+	}
+	if(_name == "angle") {
+		return vnx::Variant(angle);
+	}
+	if(_name == "size") {
+		return vnx::Variant(size);
+	}
+	if(_name == "total_angle") {
+		return vnx::Variant(total_angle);
+	}
+	if(_name == "error") {
+		return vnx::Variant(error);
+	}
+	return vnx::Variant();
+}
+
+void surface_t::set_field(const std::string& _name, const vnx::Variant& _value) {
+	if(_name == "center") {
+		_value.to(center);
+	} else if(_name == "normal") {
+		_value.to(normal);
+	} else if(_name == "angle") {
+		_value.to(angle);
+	} else if(_name == "size") {
+		_value.to(size);
+	} else if(_name == "total_angle") {
+		_value.to(total_angle);
+	} else if(_name == "error") {
+		_value.to(error);
+	}
+}
+
 /// \private
 std::ostream& operator<<(std::ostream& _out, const surface_t& _value) {
 	_value.write(_out);
@@ -125,52 +153,56 @@ std::istream& operator>>(std::istream& _in, surface_t& _value) {
 	return _in;
 }
 
-const vnx::TypeCode* surface_t::get_type_code() {
-	const vnx::TypeCode* type_code = vnx::get_type_code(vnx::Hash64(0xbd0ad8f0ef534d8ull));
+const vnx::TypeCode* surface_t::static_get_type_code() {
+	const vnx::TypeCode* type_code = vnx::get_type_code(VNX_TYPE_HASH);
 	if(!type_code) {
-		type_code = vnx::register_type_code(create_type_code());
+		type_code = vnx::register_type_code(static_create_type_code());
 	}
 	return type_code;
 }
 
-std::shared_ptr<vnx::TypeCode> surface_t::create_type_code() {
-	std::shared_ptr<vnx::TypeCode> type_code = std::make_shared<vnx::TypeCode>(true);
+std::shared_ptr<vnx::TypeCode> surface_t::static_create_type_code() {
+	auto type_code = std::make_shared<vnx::TypeCode>();
 	type_code->name = "automy.vision.surface_t";
 	type_code->type_hash = vnx::Hash64(0xbd0ad8f0ef534d8ull);
 	type_code->code_hash = vnx::Hash64(0x73a6fb2e335ad8adull);
+	type_code->is_native = true;
+	type_code->native_size = sizeof(::automy::vision::surface_t);
 	type_code->create_value = []() -> std::shared_ptr<vnx::Value> { return std::make_shared<vnx::Struct<surface_t>>(); };
 	type_code->fields.resize(6);
 	{
-		vnx::TypeField& field = type_code->fields[0];
+		auto& field = type_code->fields[0];
 		field.is_extended = true;
 		field.name = "center";
 		field.code = {21, 2, 3, 1, 9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[1];
+		auto& field = type_code->fields[1];
 		field.is_extended = true;
 		field.name = "normal";
 		field.code = {21, 2, 3, 1, 9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[2];
+		auto& field = type_code->fields[2];
 		field.is_extended = true;
 		field.name = "angle";
 		field.code = {21, 2, 2, 1, 9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[3];
+		auto& field = type_code->fields[3];
 		field.is_extended = true;
 		field.name = "size";
 		field.code = {21, 2, 2, 1, 9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[4];
+		auto& field = type_code->fields[4];
+		field.data_size = 4;
 		field.name = "total_angle";
 		field.code = {9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[5];
+		auto& field = type_code->fields[5];
+		field.data_size = 4;
 		field.name = "error";
 		field.code = {9};
 	}
@@ -186,32 +218,45 @@ std::shared_ptr<vnx::TypeCode> surface_t::create_type_code() {
 namespace vnx {
 
 void read(TypeInput& in, ::automy::vision::surface_t& value, const TypeCode* type_code, const uint16_t* code) {
+	if(code) {
+		switch(code[0]) {
+			case CODE_OBJECT:
+			case CODE_ALT_OBJECT: {
+				Object tmp;
+				vnx::read(in, tmp, type_code, code);
+				value.from_object(tmp);
+				return;
+			}
+			case CODE_DYNAMIC:
+			case CODE_ALT_DYNAMIC:
+				vnx::read_dynamic(in, value);
+				return;
+		}
+	}
 	if(!type_code) {
-		throw std::logic_error("read(): type_code == 0");
+		vnx::skip(in, type_code, code);
+		return;
 	}
 	if(code) {
 		switch(code[0]) {
 			case CODE_STRUCT: type_code = type_code->depends[code[1]]; break;
 			case CODE_ALT_STRUCT: type_code = type_code->depends[vnx::flip_bytes(code[1])]; break;
-			default: vnx::skip(in, type_code, code); return;
+			default: {
+				vnx::skip(in, type_code, code);
+				return;
+			}
 		}
 	}
-	const char* const _buf = in.read(type_code->total_field_size);
+	const auto* const _buf = in.read(type_code->total_field_size);
 	if(type_code->is_matched) {
-		{
-			const vnx::TypeField* const _field = type_code->field_map[4];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.total_angle, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[4]) {
+			vnx::read_value(_buf + _field->offset, value.total_angle, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[5];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.error, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[5]) {
+			vnx::read_value(_buf + _field->offset, value.error, _field->code.data());
 		}
 	}
-	for(const vnx::TypeField* _field : type_code->ext_fields) {
+	for(const auto* _field : type_code->ext_fields) {
 		switch(_field->native_index) {
 			case 0: vnx::read(in, value.center, type_code, _field->code.data()); break;
 			case 1: vnx::read(in, value.normal, type_code, _field->code.data()); break;
@@ -223,14 +268,19 @@ void read(TypeInput& in, ::automy::vision::surface_t& value, const TypeCode* typ
 }
 
 void write(TypeOutput& out, const ::automy::vision::surface_t& value, const TypeCode* type_code, const uint16_t* code) {
+	if(code && code[0] == CODE_OBJECT) {
+		vnx::write(out, value.to_object(), nullptr, code);
+		return;
+	}
 	if(!type_code || (code && code[0] == CODE_ANY)) {
-		type_code = vnx::write_type_code<::automy::vision::surface_t>(out);
+		type_code = automy::vision::vnx_native_type_code_surface_t;
+		out.write_type_code(type_code);
 		vnx::write_class_header<::automy::vision::surface_t>(out);
 	}
-	if(code && code[0] == CODE_STRUCT) {
+	else if(code && code[0] == CODE_STRUCT) {
 		type_code = type_code->depends[code[1]];
 	}
-	char* const _buf = out.write(8);
+	auto* const _buf = out.write(8);
 	vnx::write_value(_buf + 0, value.total_angle);
 	vnx::write_value(_buf + 4, value.error);
 	vnx::write(out, value.center, type_code, type_code->fields[0].code.data());
@@ -249,6 +299,14 @@ void write(std::ostream& out, const ::automy::vision::surface_t& value) {
 
 void accept(Visitor& visitor, const ::automy::vision::surface_t& value) {
 	value.accept(visitor);
+}
+
+bool is_equivalent<::automy::vision::surface_t>::operator()(const uint16_t* code, const TypeCode* type_code) {
+	if(code[0] != CODE_STRUCT || !type_code) {
+		return false;
+	}
+	type_code = type_code->depends[code[1]];
+	return type_code->type_hash == ::automy::vision::surface_t::VNX_TYPE_HASH && type_code->is_equivalent;
 }
 
 } // vnx

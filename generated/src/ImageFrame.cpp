@@ -3,11 +3,11 @@
 
 #include <automy/vision/package.hxx>
 #include <automy/vision/ImageFrame.hxx>
-#include <vnx/Input.h>
-#include <vnx/Output.h>
-#include <vnx/Visitor.h>
-#include <vnx/Object.h>
-#include <vnx/Struct.h>
+#include <automy/vision/image_format_e.hxx>
+#include <vnx/Value.h>
+#include <vnx/Variant.hpp>
+
+#include <vnx/vnx.h>
 
 
 namespace automy {
@@ -15,14 +15,18 @@ namespace vision {
 
 
 const vnx::Hash64 ImageFrame::VNX_TYPE_HASH(0x763bc915ddf0300bull);
-const vnx::Hash64 ImageFrame::VNX_CODE_HASH(0x685577db598d3f1full);
+const vnx::Hash64 ImageFrame::VNX_CODE_HASH(0x3661495df34b8176ull);
 
 vnx::Hash64 ImageFrame::get_type_hash() const {
 	return VNX_TYPE_HASH;
 }
 
-const char* ImageFrame::get_type_name() const {
+std::string ImageFrame::get_type_name() const {
 	return "automy.vision.ImageFrame";
+}
+
+const vnx::TypeCode* ImageFrame::get_type_code() const {
+	return automy::vision::vnx_native_type_code_ImageFrame;
 }
 
 std::shared_ptr<ImageFrame> ImageFrame::create() {
@@ -42,7 +46,7 @@ void ImageFrame::write(vnx::TypeOutput& _out, const vnx::TypeCode* _type_code, c
 }
 
 void ImageFrame::accept(vnx::Visitor& _visitor) const {
-	const vnx::TypeCode* _type_code = get_type_code();
+	const vnx::TypeCode* _type_code = automy::vision::vnx_native_type_code_ImageFrame;
 	_visitor.type_begin(*_type_code);
 	_visitor.type_field(_type_code->fields[0], 0); vnx::accept(_visitor, time);
 	_visitor.type_field(_type_code->fields[1], 1); vnx::accept(_visitor, time_end);
@@ -55,8 +59,8 @@ void ImageFrame::accept(vnx::Visitor& _visitor) const {
 }
 
 void ImageFrame::write(std::ostream& _out) const {
-	_out << "{";
-	_out << "\"time\": "; vnx::write(_out, time);
+	_out << "{\"__type\": \"automy.vision.ImageFrame\"";
+	_out << ", \"time\": "; vnx::write(_out, time);
 	_out << ", \"time_end\": "; vnx::write(_out, time_end);
 	_out << ", \"format\": "; vnx::write(_out, format);
 	_out << ", \"frame\": "; vnx::write(_out, frame);
@@ -67,29 +71,14 @@ void ImageFrame::write(std::ostream& _out) const {
 }
 
 void ImageFrame::read(std::istream& _in) {
-	std::map<std::string, std::string> _object;
-	vnx::read_object(_in, _object);
-	for(const auto& _entry : _object) {
-		if(_entry.first == "format") {
-			vnx::from_string(_entry.second, format);
-		} else if(_entry.first == "frame") {
-			vnx::from_string(_entry.second, frame);
-		} else if(_entry.first == "intensity") {
-			vnx::from_string(_entry.second, intensity);
-		} else if(_entry.first == "layer") {
-			vnx::from_string(_entry.second, layer);
-		} else if(_entry.first == "properties") {
-			vnx::from_string(_entry.second, properties);
-		} else if(_entry.first == "time") {
-			vnx::from_string(_entry.second, time);
-		} else if(_entry.first == "time_end") {
-			vnx::from_string(_entry.second, time_end);
-		}
+	if(auto _json = vnx::read_json(_in)) {
+		from_object(_json->to_object());
 	}
 }
 
 vnx::Object ImageFrame::to_object() const {
 	vnx::Object _object;
+	_object["__type"] = "automy.vision.ImageFrame";
 	_object["time"] = time;
 	_object["time_end"] = time_end;
 	_object["format"] = format;
@@ -120,6 +109,49 @@ void ImageFrame::from_object(const vnx::Object& _object) {
 	}
 }
 
+vnx::Variant ImageFrame::get_field(const std::string& _name) const {
+	if(_name == "time") {
+		return vnx::Variant(time);
+	}
+	if(_name == "time_end") {
+		return vnx::Variant(time_end);
+	}
+	if(_name == "format") {
+		return vnx::Variant(format);
+	}
+	if(_name == "frame") {
+		return vnx::Variant(frame);
+	}
+	if(_name == "layer") {
+		return vnx::Variant(layer);
+	}
+	if(_name == "intensity") {
+		return vnx::Variant(intensity);
+	}
+	if(_name == "properties") {
+		return vnx::Variant(properties);
+	}
+	return vnx::Variant();
+}
+
+void ImageFrame::set_field(const std::string& _name, const vnx::Variant& _value) {
+	if(_name == "time") {
+		_value.to(time);
+	} else if(_name == "time_end") {
+		_value.to(time_end);
+	} else if(_name == "format") {
+		_value.to(format);
+	} else if(_name == "frame") {
+		_value.to(frame);
+	} else if(_name == "layer") {
+		_value.to(layer);
+	} else if(_name == "intensity") {
+		_value.to(intensity);
+	} else if(_name == "properties") {
+		_value.to(properties);
+	}
+}
+
 /// \private
 std::ostream& operator<<(std::ostream& _out, const ImageFrame& _value) {
 	_value.write(_out);
@@ -132,66 +164,78 @@ std::istream& operator>>(std::istream& _in, ImageFrame& _value) {
 	return _in;
 }
 
-const vnx::TypeCode* ImageFrame::get_type_code() {
-	const vnx::TypeCode* type_code = vnx::get_type_code(vnx::Hash64(0x763bc915ddf0300bull));
+const vnx::TypeCode* ImageFrame::static_get_type_code() {
+	const vnx::TypeCode* type_code = vnx::get_type_code(VNX_TYPE_HASH);
 	if(!type_code) {
-		type_code = vnx::register_type_code(create_type_code());
+		type_code = vnx::register_type_code(static_create_type_code());
 	}
 	return type_code;
 }
 
-std::shared_ptr<vnx::TypeCode> ImageFrame::create_type_code() {
-	std::shared_ptr<vnx::TypeCode> type_code = std::make_shared<vnx::TypeCode>(true);
+std::shared_ptr<vnx::TypeCode> ImageFrame::static_create_type_code() {
+	auto type_code = std::make_shared<vnx::TypeCode>();
 	type_code->name = "automy.vision.ImageFrame";
 	type_code->type_hash = vnx::Hash64(0x763bc915ddf0300bull);
-	type_code->code_hash = vnx::Hash64(0x685577db598d3f1full);
+	type_code->code_hash = vnx::Hash64(0x3661495df34b8176ull);
+	type_code->is_native = true;
 	type_code->is_class = true;
+	type_code->native_size = sizeof(::automy::vision::ImageFrame);
 	type_code->create_value = []() -> std::shared_ptr<vnx::Value> { return std::make_shared<ImageFrame>(); };
 	type_code->depends.resize(1);
-	type_code->depends[0] = ::automy::vision::image_format_e::get_type_code();
+	type_code->depends[0] = ::automy::vision::image_format_e::static_get_type_code();
 	type_code->fields.resize(7);
 	{
-		vnx::TypeField& field = type_code->fields[0];
+		auto& field = type_code->fields[0];
+		field.data_size = 8;
 		field.name = "time";
 		field.code = {8};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[1];
+		auto& field = type_code->fields[1];
+		field.data_size = 8;
 		field.name = "time_end";
 		field.code = {8};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[2];
+		auto& field = type_code->fields[2];
 		field.is_extended = true;
 		field.name = "format";
 		field.code = {19, 0};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[3];
+		auto& field = type_code->fields[3];
 		field.is_extended = true;
 		field.name = "frame";
-		field.code = {12, 5};
+		field.code = {32};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[4];
+		auto& field = type_code->fields[4];
+		field.data_size = 4;
 		field.name = "layer";
 		field.value = vnx::to_string(0);
 		field.code = {7};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[5];
+		auto& field = type_code->fields[5];
+		field.data_size = 4;
 		field.name = "intensity";
 		field.value = vnx::to_string(-1);
 		field.code = {9};
 	}
 	{
-		vnx::TypeField& field = type_code->fields[6];
+		auto& field = type_code->fields[6];
 		field.is_extended = true;
 		field.name = "properties";
-		field.code = {13, 4, 12, 5, 17};
+		field.code = {13, 3, 32, 17};
 	}
 	type_code->build();
 	return type_code;
+}
+
+std::shared_ptr<vnx::Value> ImageFrame::vnx_call_switch(std::shared_ptr<const vnx::Value> _method) {
+	switch(_method->get_type_hash()) {
+	}
+	return nullptr;
 }
 
 
@@ -202,44 +246,51 @@ std::shared_ptr<vnx::TypeCode> ImageFrame::create_type_code() {
 namespace vnx {
 
 void read(TypeInput& in, ::automy::vision::ImageFrame& value, const TypeCode* type_code, const uint16_t* code) {
+	if(code) {
+		switch(code[0]) {
+			case CODE_OBJECT:
+			case CODE_ALT_OBJECT: {
+				Object tmp;
+				vnx::read(in, tmp, type_code, code);
+				value.from_object(tmp);
+				return;
+			}
+			case CODE_DYNAMIC:
+			case CODE_ALT_DYNAMIC:
+				vnx::read_dynamic(in, value);
+				return;
+		}
+	}
 	if(!type_code) {
-		throw std::logic_error("read(): type_code == 0");
+		vnx::skip(in, type_code, code);
+		return;
 	}
 	if(code) {
 		switch(code[0]) {
 			case CODE_STRUCT: type_code = type_code->depends[code[1]]; break;
 			case CODE_ALT_STRUCT: type_code = type_code->depends[vnx::flip_bytes(code[1])]; break;
-			default: vnx::skip(in, type_code, code); return;
+			default: {
+				vnx::skip(in, type_code, code);
+				return;
+			}
 		}
 	}
-	const char* const _buf = in.read(type_code->total_field_size);
+	const auto* const _buf = in.read(type_code->total_field_size);
 	if(type_code->is_matched) {
-		{
-			const vnx::TypeField* const _field = type_code->field_map[0];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.time, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[0]) {
+			vnx::read_value(_buf + _field->offset, value.time, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[1];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.time_end, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[1]) {
+			vnx::read_value(_buf + _field->offset, value.time_end, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[4];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.layer, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[4]) {
+			vnx::read_value(_buf + _field->offset, value.layer, _field->code.data());
 		}
-		{
-			const vnx::TypeField* const _field = type_code->field_map[5];
-			if(_field) {
-				vnx::read_value(_buf + _field->offset, value.intensity, _field->code.data());
-			}
+		if(const auto* const _field = type_code->field_map[5]) {
+			vnx::read_value(_buf + _field->offset, value.intensity, _field->code.data());
 		}
 	}
-	for(const vnx::TypeField* _field : type_code->ext_fields) {
+	for(const auto* _field : type_code->ext_fields) {
 		switch(_field->native_index) {
 			case 2: vnx::read(in, value.format, type_code, _field->code.data()); break;
 			case 3: vnx::read(in, value.frame, type_code, _field->code.data()); break;
@@ -250,14 +301,19 @@ void read(TypeInput& in, ::automy::vision::ImageFrame& value, const TypeCode* ty
 }
 
 void write(TypeOutput& out, const ::automy::vision::ImageFrame& value, const TypeCode* type_code, const uint16_t* code) {
+	if(code && code[0] == CODE_OBJECT) {
+		vnx::write(out, value.to_object(), nullptr, code);
+		return;
+	}
 	if(!type_code || (code && code[0] == CODE_ANY)) {
-		type_code = vnx::write_type_code<::automy::vision::ImageFrame>(out);
+		type_code = automy::vision::vnx_native_type_code_ImageFrame;
+		out.write_type_code(type_code);
 		vnx::write_class_header<::automy::vision::ImageFrame>(out);
 	}
-	if(code && code[0] == CODE_STRUCT) {
+	else if(code && code[0] == CODE_STRUCT) {
 		type_code = type_code->depends[code[1]];
 	}
-	char* const _buf = out.write(24);
+	auto* const _buf = out.write(24);
 	vnx::write_value(_buf + 0, value.time);
 	vnx::write_value(_buf + 8, value.time_end);
 	vnx::write_value(_buf + 16, value.layer);

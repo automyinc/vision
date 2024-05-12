@@ -6,28 +6,33 @@
 
 #include <vnx/Type.h>
 #include <automy/vision/package.hxx>
-#include <automy/math/Vector2f.h>
-#include <automy/math/Vector3f.h>
+#include <automy/math/Vector2f.hpp>
+#include <automy/math/Vector3f.hpp>
 
 
 namespace automy {
 namespace vision {
 
-struct surface_t {
+struct AUTOMY_VISION_EXPORT surface_t {
 	
 	
 	::automy::math::Vector3f center;
 	::automy::math::Vector3f normal;
 	::automy::math::Vector2f angle;
 	::automy::math::Vector2f size;
-	::vnx::float32_t total_angle = 0;
-	::vnx::float32_t error = 0;
+	vnx::float32_t total_angle = 0;
+	vnx::float32_t error = 0;
 	
 	static const vnx::Hash64 VNX_TYPE_HASH;
 	static const vnx::Hash64 VNX_CODE_HASH;
 	
+	static constexpr uint64_t VNX_TYPE_ID = 0xbd0ad8f0ef534d8ull;
+	
+	surface_t() {}
+	
 	vnx::Hash64 get_type_hash() const;
-	const char* get_type_name() const;
+	std::string get_type_name() const;
+	const vnx::TypeCode* get_type_code() const;
 	
 	static std::shared_ptr<surface_t> create();
 	std::shared_ptr<surface_t> clone() const;
@@ -38,21 +43,48 @@ struct surface_t {
 	void read(std::istream& _in);
 	void write(std::ostream& _out) const;
 	
+	template<typename T>
+	void accept_generic(T& _visitor) const;
 	void accept(vnx::Visitor& _visitor) const;
 	
 	vnx::Object to_object() const;
 	void from_object(const vnx::Object& object);
 	
+	vnx::Variant get_field(const std::string& name) const;
+	void set_field(const std::string& name, const vnx::Variant& value);
+	
 	friend std::ostream& operator<<(std::ostream& _out, const surface_t& _value);
 	friend std::istream& operator>>(std::istream& _in, surface_t& _value);
 	
-	static const vnx::TypeCode* get_type_code();
-	static std::shared_ptr<vnx::TypeCode> create_type_code();
+	static const vnx::TypeCode* static_get_type_code();
+	static std::shared_ptr<vnx::TypeCode> static_create_type_code();
 	
 };
+
+template<typename T>
+void surface_t::accept_generic(T& _visitor) const {
+	_visitor.template type_begin<surface_t>(6);
+	_visitor.type_field("center", 0); _visitor.accept(center);
+	_visitor.type_field("normal", 1); _visitor.accept(normal);
+	_visitor.type_field("angle", 2); _visitor.accept(angle);
+	_visitor.type_field("size", 3); _visitor.accept(size);
+	_visitor.type_field("total_angle", 4); _visitor.accept(total_angle);
+	_visitor.type_field("error", 5); _visitor.accept(error);
+	_visitor.template type_end<surface_t>(6);
+}
 
 
 } // namespace automy
 } // namespace vision
+
+
+namespace vnx {
+
+template<>
+struct is_equivalent<::automy::vision::surface_t> {
+	bool operator()(const uint16_t* code, const TypeCode* type_code);
+};
+
+} // vnx
 
 #endif // INCLUDE_automy_vision_surface_t_HXX_
